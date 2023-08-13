@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Button } from "../ui/button";
+import { ShoppingCart } from "lucide-react";
 
 export default function Header() {
   const pathname = usePathname();
@@ -20,8 +22,9 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <div>aaa</div>
-          <div>bbb</div>
+          <Button variant="ghost">
+            <ShoppingCart />
+          </Button>
         </div>
       </div>
     </header>

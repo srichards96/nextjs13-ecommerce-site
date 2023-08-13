@@ -4,11 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const links = [
-  { key: "1", href: "javascript:void", label: "About" },
-  { key: "2", href: "javascript:void", label: "Contact Us" },
-  { key: "3", href: "javascript:void", label: "Legal" },
-  { key: "4", href: "javascript:void", label: "Privacy Policy" },
-  { key: "5", href: "javascript:void", label: "Cookie Policy" },
+  { key: "1", href: "#", label: "About" },
+  { key: "2", href: "#", label: "Contact Us" },
+  { key: "3", href: "#", label: "Legal" },
+  { key: "4", href: "#", label: "Privacy Policy" },
+  { key: "5", href: "#", label: "Cookie Policy" },
 ];
 
 export default function Footer() {
