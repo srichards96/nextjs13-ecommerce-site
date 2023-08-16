@@ -1,23 +1,21 @@
-import { draftMode } from "next/headers";
 import { getCachedClient } from "@/sanity/lib/getClient";
-import { postsQuery } from "@/sanity/lib/queries";
-import Posts from "@/components/Posts";
-import PreviewPosts from "@/components/PreviewPosts";
-import PreviewProvider from "@/components/PreviewProvider";
+import { SanityDocument } from "sanity";
+import ProductGrid from "@/components/ProductGrid";
 
 export default async function Home() {
-  const preview = draftMode().isEnabled
-    ? { token: process.env.SANITY_API_READ_TOKEN }
-    : undefined;
-  const posts = await getCachedClient(preview)(postsQuery);
+  const products = await getCachedClient()<SanityDocument[]>(
+    `*[_type == "product"] {
+      _id,
+      "slug": slug.current,
+      name,
+      "images": images[].asset->{url},
+    }`
+  );
 
-  if (preview && preview.token) {
-    return (
-      <PreviewProvider token={preview.token}>
-        <PreviewPosts posts={posts} />
-      </PreviewProvider>
-    );
-  }
-
-  return <Posts posts={posts} />;
+  return (
+    <div className="container mx-auto overflow-x-scroll pt-4">
+      <ProductGrid products={products} />
+      <pre>{JSON.stringify(products, null, 2)}</pre>
+    </div>
+  );
 }

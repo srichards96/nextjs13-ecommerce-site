@@ -6,30 +6,26 @@ import PreviewPost from "@/components/PreviewPost";
 import { cachedClient } from "@/sanity/lib/client";
 import { postPathsQuery, postQuery } from "@/sanity/lib/queries";
 import { getCachedClient } from "@/sanity/lib/getClient";
+import { redirect } from "next/navigation";
 
-// Prepare Next.js to know which routes already exist
-export async function generateStaticParams() {
-  const posts = await cachedClient(postPathsQuery);
+type Props = {
+  params: {
+    slug: string;
+  };
+};
 
-  return posts;
-}
-
-export default async function Page({ params }: { params: any }) {
-  const preview = draftMode().isEnabled
-    ? { token: process.env.SANITY_API_READ_TOKEN }
-    : undefined;
-  const post = await getCachedClient(preview)<SanityDocument>(
-    postQuery,
-    params
+export default async function Page({ params }: Props) {
+  const product = await getCachedClient()<SanityDocument[]>(
+    `*[_type == "product" && slug.current == "${params.slug}"] {
+      _id,
+      name,
+      "images": images[].asset->{url},
+    }`
   );
 
-  if (preview?.token) {
-    return (
-      <PreviewProvider token={preview.token}>
-        <PreviewPost post={post} />
-      </PreviewProvider>
-    );
+  if (!product) {
+    return redirect("/");
   }
 
-  return <Post post={post} />;
+  return <pre>{JSON.stringify(product, null, 4)}</pre>;
 }
