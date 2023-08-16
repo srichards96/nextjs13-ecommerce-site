@@ -19,7 +19,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="py-4 bg-red-500">
+    <footer className="py-4 bg-background border-t">
       <div className="container mx-auto">
         <div>
           <div className="pb-2">
