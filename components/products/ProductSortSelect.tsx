@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type ProductSortSelectValue = "date-desc" | "price-asc" | "price-desc";
 
@@ -15,21 +15,23 @@ const valueLabelMap = new Map<ProductSortSelectValue, string>([
 
 type Props = {
   defaultValue: ProductSortSelectValue;
-  urlBase?: string;
 };
 
-export default function ProductSortSelect({
-  defaultValue,
-  urlBase = "/",
-}: Props) {
+export default function ProductSortSelect({ defaultValue }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [value, setValue] = useState(() =>
     valueLabelMap.has(defaultValue) ? defaultValue : "date-desc"
   );
 
   function onChange(value: ProductSortSelectValue) {
     setValue(value);
-    router.push(`${urlBase}?sort=${value}`);
+
+    const query = new URLSearchParams(Array.from(searchParams.entries()));
+    query.set("sort", value);
+    router.push(`${pathname}?${query.toString()}`);
   }
 
   return (
