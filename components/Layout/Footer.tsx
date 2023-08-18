@@ -27,7 +27,7 @@ export default function Footer() {
               <Link
                 key={key}
                 href={href}
-                className="text-xl px-2 border-r last:border-r-0 border-black"
+                className="text-xl px-2 border-r last:border-r-0 border-foreground"
               >
                 {label}
               </Link>

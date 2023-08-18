@@ -9,13 +9,19 @@ export default async function Home() {
       "slug": slug.current,
       name,
       "images": images[].asset->{url},
+      currency,
+      price,
     }`
   );
 
   return (
-    <div className="container mx-auto overflow-x-scroll pt-4">
-      <ProductGrid products={products} />
-      <pre>{JSON.stringify(products, null, 2)}</pre>
+    <div className="container mx-auto py-4">
+      <div className="grid grid-cols-4">
+        <div>sidepanel</div>
+        <div className="col-span-3">
+          <ProductGrid products={products} />
+        </div>
+      </div>
     </div>
   );
 }
