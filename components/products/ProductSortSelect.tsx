@@ -23,7 +23,9 @@ export default function ProductSortSelect({
   urlBase = "/",
 }: Props) {
   const router = useRouter();
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(() =>
+    valueLabelMap.has(defaultValue) ? defaultValue : "date-desc"
+  );
 
   function onChange(value: ProductSortSelectValue) {
     setValue(value);
