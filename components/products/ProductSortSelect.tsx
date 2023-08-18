@@ -7,6 +7,12 @@ import { useRouter } from "next/navigation";
 
 export type ProductSortSelectValue = "date-desc" | "price-asc" | "price-desc";
 
+const valueLabelMap = new Map<ProductSortSelectValue, string>([
+  ["date-desc", "Newest"],
+  ["price-asc", "Price, low to high"],
+  ["price-desc", "Price, high to low"],
+]);
+
 type Props = {
   defaultValue: ProductSortSelectValue;
   urlBase?: string;
@@ -30,9 +36,11 @@ export default function ProductSortSelect({
         <SelectValue placeholder="Sort by" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="date-desc">Newest</SelectItem>
-        <SelectItem value="price-asc">Price, low to high</SelectItem>
-        <SelectItem value="price-desc">Price, high to low</SelectItem>
+        {[...valueLabelMap].map(([value, label]) => (
+          <SelectItem key={value} value={value}>
+            {label}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );
