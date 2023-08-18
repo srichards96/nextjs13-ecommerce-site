@@ -44,19 +44,25 @@ export default async function Home({ searchParams }: Props) {
 
   return (
     <div className="container mx-auto py-4">
-      <div className="pb-4 max-w-[200px] ml-auto">
+      <div className="pb-4 sm:max-w-[200px] ml-auto">
         <ProductSortSelect defaultValue={sort} />
       </div>
 
-      <div className="grid grid-cols-4">
-        <div>
-          <ProductFilter
-            name="categories"
-            title="Categories"
-            options={uniqueCategories}
-          />
-          <ProductFilter name="sizes" title="Sizes" options={uniqueSizes} />
-          <ProductFilter name="colors" title="Colors" options={uniqueColors} />
+      <div className="sm:grid sm:grid-cols-4">
+        <div className="sm:relative">
+          <div className="sm:sticky sm:top-[81px]">
+            <ProductFilter
+              name="categories"
+              title="Categories"
+              options={uniqueCategories}
+            />
+            <ProductFilter name="sizes" title="Sizes" options={uniqueSizes} />
+            <ProductFilter
+              name="colors"
+              title="Colors"
+              options={uniqueColors}
+            />
+          </div>
         </div>
         <div className="col-span-3">
           <ProductGrid products={products} />
