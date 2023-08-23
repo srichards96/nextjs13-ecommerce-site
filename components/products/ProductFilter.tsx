@@ -8,14 +8,20 @@ type Props = {
   name: string;
   title: string;
   options: string[];
+  defaultOptionsSelected: string[];
 };
 
-export default function ProductFilter({ name, title, options }: Props) {
+export default function ProductFilter({
+  name,
+  title,
+  options,
+  defaultOptionsSelected,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState(defaultOptionsSelected);
 
   function toggleOptionSelected(option: string) {
     const currentlySelected = selected.includes(option);

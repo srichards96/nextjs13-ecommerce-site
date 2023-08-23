@@ -69,12 +69,19 @@ export default async function Home({ searchParams }: Props) {
               name="categories"
               title="Categories"
               options={uniqueCategories}
+              defaultOptionsSelected={selectedCategories}
             />
-            <ProductFilter name="sizes" title="Sizes" options={uniqueSizes} />
+            <ProductFilter
+              name="sizes"
+              title="Sizes"
+              options={uniqueSizes}
+              defaultOptionsSelected={selectedSizes}
+            />
             <ProductFilter
               name="colors"
               title="Colors"
               options={uniqueColors}
+              defaultOptionsSelected={selectedColors}
             />
           </div>
         </div>
