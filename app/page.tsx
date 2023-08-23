@@ -8,7 +8,10 @@ import ProductFilter from "@/components/products/ProductFilter";
 
 type Props = {
   searchParams: {
-    sort: ProductSortSelectValue;
+    sort?: ProductSortSelectValue;
+    categories?: string;
+    sizes?: string;
+    colors?: string;
   };
 };
 
@@ -19,7 +22,10 @@ const orderByMap = new Map<ProductSortSelectValue, string>([
 ]);
 
 export default async function Home({ searchParams }: Props) {
-  const { sort = "date-desc" } = searchParams;
+  const { sort = "date-desc", categories, sizes, colors } = searchParams;
+  const selectedCategories = categories?.split("+") ?? [];
+  const selectedSizes = sizes?.split("+") ?? [];
+  const selectedColors = colors?.split("+") ?? [];
 
   const uniqueCategories = await getCachedClient()<string[]>(`
     array::unique(*[_type == "product"].categories[] | order(@))
@@ -30,6 +36,7 @@ export default async function Home({ searchParams }: Props) {
   const uniqueColors = await getCachedClient()<string[]>(`
     array::unique(*[_type == "product"].colors[] | order(@))
   `);
+
   const products = await getCachedClient()<SanityDocument[]>(
     `*[_type == "product"] | order(${orderByMap.get(sort)}) {
       _id,
@@ -39,7 +46,14 @@ export default async function Home({ searchParams }: Props) {
       currency,
       price,
       colors,
-    }[0...20]`
+      categories,
+      sizes,
+      colors,
+    }
+    [${selectedCategories.map((c) => `"${c}" in categories`).join(" || ")}]
+    [${selectedSizes.map((s) => `"${s}" in sizes`).join(" || ")}]
+    [${selectedColors.map((c) => `"${c}" in colors`).join(" || ")}]
+    [0...20]`
   );
 
   return (

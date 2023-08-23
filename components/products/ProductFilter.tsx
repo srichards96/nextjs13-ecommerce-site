@@ -27,7 +27,7 @@ export default function ProductFilter({ name, title, options }: Props) {
 
     const query = new URLSearchParams(Array.from(searchParams.entries()));
     if (newSelected.length > 0) {
-      query.set(name, newSelected.join("-"));
+      query.set(name, newSelected.join("+"));
     } else {
       query.delete(name);
     }
