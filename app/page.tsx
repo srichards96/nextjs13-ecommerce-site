@@ -10,6 +10,7 @@ import {
   uniqueProductColorsQuery,
 } from "@/sanity/lib/queries";
 import { ProductSort } from "@/sanity/lib/types";
+import ProductFilters from "@/components/products/ProductFilters";
 
 type Props = {
   searchParams: {
@@ -47,30 +48,20 @@ export default async function Home({ searchParams }: Props) {
         <ProductSortSelect defaultValue={sort} />
       </div>
 
-      <div className="sm:grid sm:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-4">
         <div className="sm:relative">
           <div className="sm:sticky sm:top-[81px]">
-            <ProductFilter
-              name="categories"
-              title="Categories"
-              options={uniqueCategories}
-              defaultOptionsSelected={selectedCategories}
-            />
-            <ProductFilter
-              name="sizes"
-              title="Sizes"
-              options={uniqueSizes}
-              defaultOptionsSelected={selectedSizes}
-            />
-            <ProductFilter
-              name="colors"
-              title="Colors"
-              options={uniqueColors}
-              defaultOptionsSelected={selectedColors}
+            <ProductFilters
+              categories={uniqueCategories}
+              defaultCategoriesSelected={selectedCategories}
+              sizes={uniqueSizes}
+              defaultSizesSelected={selectedSizes}
+              colors={uniqueColors}
+              defaultColorsSelected={selectedColors}
             />
           </div>
         </div>
-        <div className="col-span-3">
+        <div className="sm:col-span-3">
           <ProductGrid products={products} />
         </div>
       </div>

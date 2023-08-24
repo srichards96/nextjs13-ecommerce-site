@@ -6,14 +6,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type Props = {
   name: string;
-  title: string;
   options: string[];
   defaultOptionsSelected: string[];
 };
 
 export default function ProductFilter({
   name,
-  title,
   options,
   defaultOptionsSelected,
 }: Props) {
@@ -41,25 +39,22 @@ export default function ProductFilter({
   }
 
   return (
-    <div className="mb-8">
-      <h2 className="text-xl mb-4">{title}</h2>
-      <div className="space-y-4">
-        {options.map((o) => (
-          <div key={o} className="flex items-center space-x-2">
-            <Checkbox
-              id={o}
-              checked={selected.includes(o)}
-              onCheckedChange={() => toggleOptionSelected(o)}
-            />
-            <label
-              htmlFor={o}
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
-            >
-              {o}
-            </label>
-          </div>
-        ))}
-      </div>
+    <div className="space-y-4">
+      {options.map((o) => (
+        <div key={o} className="flex items-center space-x-2">
+          <Checkbox
+            id={o}
+            checked={selected.includes(o)}
+            onCheckedChange={() => toggleOptionSelected(o)}
+          />
+          <label
+            htmlFor={o}
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 capitalize"
+          >
+            {o}
+          </label>
+        </div>
+      ))}
     </div>
   );
 }
