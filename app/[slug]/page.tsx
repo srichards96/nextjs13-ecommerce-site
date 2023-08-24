@@ -1,6 +1,7 @@
 import { SanityDocument } from "@sanity/client";
 import { getCachedClient } from "@/sanity/lib/getClient";
 import { redirect } from "next/navigation";
+import { productBySlugQuery } from "@/sanity/lib/queries";
 
 type Props = {
   params: {
@@ -9,12 +10,10 @@ type Props = {
 };
 
 export default async function Page({ params }: Props) {
-  const product = await getCachedClient()<SanityDocument[]>(
-    `*[_type == "product" && slug.current == "${params.slug}"] {
-      _id,
-      name,
-      "images": images[].asset->{url},
-    }`
+  const { slug } = params;
+
+  const product = await getCachedClient()<SanityDocument>(
+    productBySlugQuery(slug)
   );
 
   if (!product) {

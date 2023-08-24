@@ -1,25 +1,24 @@
 import { getCachedClient } from "@/sanity/lib/getClient";
 import { SanityDocument } from "sanity";
-import ProductGrid from "@/components/ProductGrid";
-import ProductSortSelect, {
-  ProductSortSelectValue,
-} from "@/components/products/ProductSortSelect";
+import ProductGrid from "@/components/products/ProductGrid";
+import ProductSortSelect from "@/components/products/ProductSortSelect";
 import ProductFilter from "@/components/products/ProductFilter";
+import {
+  productsQuery,
+  uniqueProductCategoriesQuery,
+  uniqueProductSizesQuery,
+  uniqueProductColorsQuery,
+} from "@/sanity/lib/queries";
+import { ProductSort } from "@/sanity/lib/types";
 
 type Props = {
   searchParams: {
-    sort?: ProductSortSelectValue;
+    sort?: ProductSort;
     categories?: string;
     sizes?: string;
     colors?: string;
   };
 };
-
-const orderByMap = new Map<ProductSortSelectValue, string>([
-  ["date-desc", "createdAt desc"],
-  ["price-asc", "price asc"],
-  ["price-desc", "price desc"],
-]);
 
 export default async function Home({ searchParams }: Props) {
   const { sort = "date-desc", categories, sizes, colors } = searchParams;
@@ -27,33 +26,19 @@ export default async function Home({ searchParams }: Props) {
   const selectedSizes = sizes?.split("+") ?? [];
   const selectedColors = colors?.split("+") ?? [];
 
-  const uniqueCategories = await getCachedClient()<string[]>(`
-    array::unique(*[_type == "product"].categories[] | order(@))
-  `);
-  const uniqueSizes = await getCachedClient()<string[]>(`
-    array::unique(*[_type == "product"].sizes[] | order(@))
-  `);
-  const uniqueColors = await getCachedClient()<string[]>(`
-    array::unique(*[_type == "product"].colors[] | order(@))
-  `);
+  const client = getCachedClient();
 
-  const products = await getCachedClient()<SanityDocument[]>(
-    `*[_type == "product"] | order(${orderByMap.get(sort)}) {
-      _id,
-      "slug": slug.current,
-      name,
-      "images": images[].asset->{url},
-      currency,
-      price,
-      colors,
-      categories,
-      sizes,
-      colors,
-    }
-    [${selectedCategories.map((c) => `"${c}" in categories`).join(" || ")}]
-    [${selectedSizes.map((s) => `"${s}" in sizes`).join(" || ")}]
-    [${selectedColors.map((c) => `"${c}" in colors`).join(" || ")}]
-    [0...20]`
+  const uniqueCategories = await client<string[]>(uniqueProductCategoriesQuery);
+  const uniqueSizes = await client<string[]>(uniqueProductSizesQuery);
+  const uniqueColors = await client<string[]>(uniqueProductColorsQuery);
+
+  const products = await client<SanityDocument[]>(
+    productsQuery({
+      sort,
+      categories: selectedCategories,
+      sizes: selectedSizes,
+      colors: selectedColors,
+    })
   );
 
   return (

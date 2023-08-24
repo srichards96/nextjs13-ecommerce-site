@@ -1,16 +1,62 @@
 import { groq } from "next-sanity";
+import { ProductSort } from "./types";
 
-// Get all posts
-export const postsQuery = groq`*[_type == "post" && defined(slug.current)]{
-    _id, title, slug
-  }`;
+export const uniqueProductCategoriesQuery = groq`array::unique(*[_type == "product"].categories[] | order(@))`;
 
-// Get a single post by its slug
-export const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{ 
-    title, mainImage, body
-  }`;
+export const uniqueProductSizesQuery = groq`array::unique(*[_type == "product"].sizes[] | order(@))`;
 
-// Get all post slugs
-export const postPathsQuery = groq`*[_type == "post" && defined(slug.current)][]{
-    "params": { "slug": slug.current }
-  }`;
+export const uniqueProductColorsQuery = groq`array::unique(*[_type == "product"].colors[] | order(@))`;
+
+type ProductsQueryOptions = {
+  sort?: ProductSort;
+  categories?: string[];
+  sizes?: string[];
+  colors?: string[];
+  count?: number;
+  offset?: number;
+};
+const productSortFilterMap = new Map<ProductSort, string>([
+  ["date-desc", "createdAt desc"],
+  ["price-asc", "price asc"],
+  ["price-desc", "price desc"],
+]);
+export const productsQuery = (options?: ProductsQueryOptions) => {
+  const sort = options?.sort ?? "date-desc";
+  const categories = options?.categories ?? [];
+  const sizes = options?.sizes ?? [];
+  const colors = options?.colors ?? [];
+  const count = options?.count ?? 20;
+  const offset = options?.offset ?? 0;
+
+  return groq`
+    *[_type == "product"] | order(${productSortFilterMap.get(sort)}) {
+      _id,
+      "slug": slug.current,
+      name,
+      "images": images[].asset->{url},
+      currency,
+      price,
+      categories,
+      colors,
+      sizes,
+      colors,
+    }
+    [${categories.map((c) => `"${c}" in categories`).join(" || ")}]
+    [${sizes.map((s) => `"${s}" in sizes`).join(" || ")}]
+    [${colors.map((c) => `"${c}" in colors`).join(" || ")}]
+    [${offset}...${offset + count}]`;
+};
+
+export const productBySlugQuery = (slug: string) => groq`
+  *[_type == "product" && slug.current == "${slug}"] {
+    _id,
+    "slug": slug.current,
+    name,
+    "images": images[].asset->{url},
+    currency,
+    price,
+    categories,
+    colors,
+    sizes,
+    colors,
+  }[0]`;

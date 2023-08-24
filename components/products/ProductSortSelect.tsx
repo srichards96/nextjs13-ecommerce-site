@@ -4,17 +4,16 @@ import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ProductSort } from "@/sanity/lib/types";
 
-export type ProductSortSelectValue = "date-desc" | "price-asc" | "price-desc";
-
-const valueLabelMap = new Map<ProductSortSelectValue, string>([
+const valueLabelMap = new Map<ProductSort, string>([
   ["date-desc", "Newest"],
   ["price-asc", "Price, low to high"],
   ["price-desc", "Price, high to low"],
 ]);
 
 type Props = {
-  defaultValue: ProductSortSelectValue;
+  defaultValue: ProductSort;
 };
 
 export default function ProductSortSelect({ defaultValue }: Props) {
@@ -26,7 +25,7 @@ export default function ProductSortSelect({ defaultValue }: Props) {
     valueLabelMap.has(defaultValue) ? defaultValue : "date-desc"
   );
 
-  function onChange(value: ProductSortSelectValue) {
+  function onChange(value: ProductSort) {
     setValue(value);
 
     const query = new URLSearchParams(Array.from(searchParams.entries()));
