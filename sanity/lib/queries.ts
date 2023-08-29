@@ -52,6 +52,7 @@ export const productBySlugQuery = (slug: string) => groq`
     _id,
     "slug": slug.current,
     name,
+    description,
     "images": images[].asset->{url},
     currency,
     price,

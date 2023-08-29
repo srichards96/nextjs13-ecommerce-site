@@ -9,13 +9,10 @@ import {
 } from "../ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 
 type Props = {
   products: SanityDocument[];
-};
-
-const formatPrice = (price: number) => {
-  return "£" + (price / 100).toFixed(2);
 };
 
 export default function ProductGrid({ products }: Props) {
