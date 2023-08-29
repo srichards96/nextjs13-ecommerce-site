@@ -23,24 +23,29 @@ export default function ProductImageGallery({ product }: Props) {
         alt={product.name}
         width="400"
         height="400"
-        className="rounded-md max-h-[70vh]"
+        draggable={false}
+        className="rounded-md w-auto max-h-[70vh]"
       />
       <div className="flex flex-wrap gap-4 mt-4">
         {product.images.map(({ url }, i) => (
-          <Image
+          <button
             key={`${product.name}-image-${i}`}
-            src={url}
-            alt=""
-            width="400"
-            height="400"
             onClick={() => setSelectedIndex(i)}
-            className={cn(
-              "object-cover object-center w-[90px] rounded-md outline outline-offset-2 outline-transparent transition-[outline-color]",
-              {
-                "outline-purple-600": i === selectedIndex,
-              }
-            )}
-          />
+          >
+            <Image
+              src={url}
+              alt={`${product.name}-image-${i}`}
+              width="400"
+              height="400"
+              draggable={false}
+              className={cn(
+                "object-cover object-center w-[90px] rounded-md outline outline-offset-2 outline-transparent transition-[outline-color]",
+                {
+                  "outline-purple-600": i === selectedIndex,
+                }
+              )}
+            />
+          </button>
         ))}
       </div>
     </div>

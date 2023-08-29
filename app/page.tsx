@@ -2,7 +2,6 @@ import { getCachedClient } from "@/sanity/lib/getClient";
 import { SanityDocument } from "sanity";
 import ProductGrid from "@/components/products/ProductGrid";
 import ProductSortSelect from "@/components/products/ProductSortSelect";
-import ProductFilter from "@/components/products/ProductFilter";
 import {
   productsQuery,
   uniqueProductCategoriesQuery,
@@ -20,6 +19,8 @@ type Props = {
     colors?: string;
   };
 };
+
+export const revalidate = 300;
 
 export default async function Home({ searchParams }: Props) {
   const { sort = "date-desc", categories, sizes, colors } = searchParams;
