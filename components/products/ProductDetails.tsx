@@ -4,9 +4,7 @@ import { formatPrice } from "@/lib/utils";
 import { Product } from "@/sanity/lib/models/Product";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Label } from "../ui/label";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,8 +19,13 @@ import {
 import { getKey, useCartStore } from "@/app/store/useCartStore";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
+import { Input } from "../ui/input";
 
 const formSchema = z.object({
+  quantity: z
+    .string()
+    .transform((v) => Number(v) || 0)
+    .refine((v) => v > 0, "Quantity must be a positive number"),
   size: z.string().min(1, "A size must be selected"),
 });
 
@@ -40,13 +43,14 @@ export default function ProductDetails({ product }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      quantity: 1,
       size: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const { _id: id, name, images, price } = product;
-    const size = values.size;
+    const { size, quantity } = values;
     const key = getKey(id, size);
 
     if (cart.has(key)) {
@@ -58,18 +62,18 @@ export default function ProductDetails({ product }: Props) {
         name,
         imageUrl: images[0]?.url ?? "",
         price,
-        quantity: 1,
+        quantity,
       });
     }
 
     toast({
       title: "Added to your cart:",
-      description: `1 * ${name} (size: ${size})`,
+      description: `${quantity} * ${name} (size: ${size})`,
       action: (
         <ToastAction
           altText="Undo last cart addition"
           onClick={() => {
-            changeCartItemQuantity(id, size, -1);
+            changeCartItemQuantity(id, size, -quantity);
           }}
         >
           Undo
@@ -111,6 +115,20 @@ export default function ProductDetails({ product }: Props) {
                     </FormItem>
                   ))}
                 </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem className="mb-4">
+              <FormLabel className="text-foreground">Quantity</FormLabel>
+              <FormControl>
+                <Input type="number" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
