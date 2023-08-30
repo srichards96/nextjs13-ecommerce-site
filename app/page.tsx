@@ -10,9 +10,11 @@ import {
 } from "@/sanity/lib/queries";
 import { ProductSort } from "@/sanity/lib/types";
 import ProductFilters from "@/components/products/ProductFilters";
+import ProductSearch from "@/components/products/ProductSearch";
 
 type Props = {
   searchParams: {
+    search?: string;
     sort?: ProductSort;
     categories?: string;
     sizes?: string;
@@ -23,7 +25,13 @@ type Props = {
 export const revalidate = 300;
 
 export default async function Home({ searchParams }: Props) {
-  const { sort = "date-desc", categories, sizes, colors } = searchParams;
+  const {
+    sort = "date-desc",
+    search,
+    categories,
+    sizes,
+    colors,
+  } = searchParams;
   const selectedCategories = categories?.split("+") ?? [];
   const selectedSizes = sizes?.split("+") ?? [];
   const selectedColors = colors?.split("+") ?? [];
@@ -37,6 +45,7 @@ export default async function Home({ searchParams }: Props) {
   const products = await client<SanityDocument[]>(
     productsQuery({
       sort,
+      search,
       categories: selectedCategories,
       sizes: selectedSizes,
       colors: selectedColors,
@@ -45,10 +54,6 @@ export default async function Home({ searchParams }: Props) {
 
   return (
     <div className="container mx-auto py-4">
-      <div className="pb-4 sm:max-w-[200px] ml-auto">
-        <ProductSortSelect defaultValue={sort} />
-      </div>
-
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-4">
         <div className="sm:relative">
           <div className="sm:sticky sm:top-[81px]">
@@ -63,7 +68,17 @@ export default async function Home({ searchParams }: Props) {
           </div>
         </div>
         <div className="sm:col-span-3">
-          <ProductGrid products={products} />
+          <div className="mb-4 flex flex-col md:flex-row gap-4 justify-between">
+            <div className="md:w-[300px]">
+              <ProductSearch defaultValue={search} />
+            </div>
+            <div className="md:w-[180px]">
+              <ProductSortSelect defaultValue={sort} />
+            </div>
+          </div>
+          <div>
+            <ProductGrid products={products} />
+          </div>
         </div>
       </div>
     </div>

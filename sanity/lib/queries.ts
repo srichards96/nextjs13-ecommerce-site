@@ -9,6 +9,7 @@ export const uniqueProductColorsQuery = groq`array::unique(*[_type == "product"]
 
 type ProductsQueryOptions = {
   sort?: ProductSort;
+  search?: string;
   categories?: string[];
   sizes?: string[];
   colors?: string[];
@@ -22,6 +23,7 @@ const productSortFilterMap = new Map<ProductSort, string>([
 ]);
 export const productsQuery = (options?: ProductsQueryOptions) => {
   const sort = options?.sort ?? "date-desc";
+  const search = options?.search ?? "";
   const categories = options?.categories ?? [];
   const sizes = options?.sizes ?? [];
   const colors = options?.colors ?? [];
@@ -41,6 +43,7 @@ export const productsQuery = (options?: ProductsQueryOptions) => {
       sizes,
       colors,
     }
+    [name match "*${search}*"]
     [${categories.map((c) => `"${c}" in categories`).join(" || ")}]
     [${sizes.map((s) => `"${s}" in sizes`).join(" || ")}]
     [${colors.map((c) => `"${c}" in colors`).join(" || ")}]

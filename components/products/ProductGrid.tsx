@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "../ui/card";
@@ -19,7 +18,7 @@ export default function ProductGrid({ products }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {products.map((p) => (
-        <Link key={p._id} href={`/${p.slug}`}>
+        <Link key={p._id} href={`/products/${p.slug}`}>
           <Card className="overflow-hidden h-full flex flex-col hover:bg-accent transition-colors">
             {!!p.images.length && (
               <Image

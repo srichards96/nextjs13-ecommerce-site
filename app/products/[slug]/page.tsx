@@ -13,7 +13,7 @@ type Props = {
 
 export const revalidate = 300;
 
-export default async function Page({ params }: Props) {
+export default async function ProductPage({ params }: Props) {
   const { slug } = params;
 
   const product = await getCachedClient()<Product>(productBySlugQuery(slug));
