@@ -125,8 +125,8 @@ export default function ProductDetails({ product }: Props) {
           control={form.control}
           name="quantity"
           render={({ field }) => (
-            <FormItem className="mb-4">
-              <FormLabel className="text-foreground">Quantity</FormLabel>
+            <FormItem className="mb-4 max-w-xs">
+              <FormLabel className="text-foreground">Quantity:</FormLabel>
               <FormControl>
                 <Input type="number" {...field} />
               </FormControl>

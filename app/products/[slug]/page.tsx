@@ -24,9 +24,13 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="container mx-auto py-4 overflow-x-hidden max-w-5xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <ProductImageGallery product={product} />
-        <ProductDetails product={product} />
+      <div className="flex flex-col md:flex-row-reverse gap-8">
+        <div className="w-full">
+          <ProductDetails product={product} />
+        </div>
+        <div className="w-full">
+          <ProductImageGallery product={product} />
+        </div>
       </div>
     </div>
   );
