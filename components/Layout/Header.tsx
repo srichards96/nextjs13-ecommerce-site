@@ -4,19 +4,10 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import {
-  Circle,
-  CircleEllipsis,
-  CircleEllipsisIcon,
-  Loader2,
-  LucideCircleEllipsis,
-  Moon,
-  MoreHorizontal,
-  ShoppingCart,
-  Sun,
-} from "lucide-react";
+import { Moon, MoreHorizontal, ShoppingCart, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import CartSidebar from "./CartSidebar";
 
 export default function Header() {
   const pathname = usePathname();
@@ -34,9 +25,7 @@ export default function Header() {
         </Link>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost">
-            <ShoppingCart />
-          </Button>
+          <CartSidebar />
           <ThemeToggle />
         </div>
       </div>

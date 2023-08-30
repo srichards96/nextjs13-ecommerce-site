@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useCartStore } from "@/app/store/useCartStore";
+import { getKey, useCartStore } from "@/app/store/useCartStore";
 
 const formSchema = z.object({
   size: z.string().min(1, "A size must be selected"),
@@ -41,20 +41,23 @@ export default function ProductDetails({ product }: Props) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const { _id: id, name, price } = product;
+    const { _id: id, name, images, price } = product;
     const size = values.size;
-    const key = `[${id},${size}]`;
+    const key = getKey(id, size);
 
     if (cart.has(key)) {
       changeCartItemQuantity(id, size, 1);
     } else {
-      addItemToCart({ id, size, name, price, quantity: 1 });
+      addItemToCart({
+        id,
+        size,
+        name,
+        imageUrl: images[0]?.url ?? "",
+        price,
+        quantity: 1,
+      });
     }
   }
-
-  useEffect(() => {
-    console.log({ cart });
-  }, [cart]);
 
   return (
     <Form {...form}>

@@ -8,6 +8,7 @@ type CartItem = {
   id: string;
   size: string;
   name: string;
+  imageUrl: string;
   price: number;
   quantity: number;
 };
@@ -19,6 +20,8 @@ type CartState = {
   changeItemQuantity: (id: string, size: string, quantity: number) => void;
   clear: () => void;
 };
+
+export const getKey = (id: string, size: string) => `[${id},${size}]`;
 
 export const useCartStore = create<CartState>()(
   persist(
@@ -32,7 +35,7 @@ export const useCartStore = create<CartState>()(
 
         set(
           produce<CartState>((state) => {
-            const key = `[${item.id},${item.size}]`;
+            const key = getKey(item.id, item.size);
 
             if (state.cart.has(key)) {
               return;
@@ -46,7 +49,7 @@ export const useCartStore = create<CartState>()(
       removeItem: (id, size) => {
         set(
           produce<CartState>((state) => {
-            const key = `[${id},${size}]`;
+            const key = getKey(id, size);
 
             state.cart.delete(key);
           })
@@ -56,7 +59,7 @@ export const useCartStore = create<CartState>()(
       changeItemQuantity: (id, size, quantity) => {
         set(
           produce<CartState>((state) => {
-            const key = `[${id},${size}]`;
+            const key = getKey(id, size);
 
             if (!state.cart.has(key)) {
               return;
@@ -74,7 +77,12 @@ export const useCartStore = create<CartState>()(
         );
       },
 
-      clear: () => {},
+      clear: () => {
+        set((state) => ({
+          ...state,
+          cart: new Map(),
+        }));
+      },
     }),
     {
       name: "cart-storage",
