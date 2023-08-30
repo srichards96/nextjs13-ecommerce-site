@@ -4,7 +4,7 @@ import { formatPrice } from "@/lib/utils";
 import { Product } from "@/sanity/lib/models/Product";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import * as z from "zod";
@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { useCartStore } from "@/app/store/useCartStore";
 
 const formSchema = z.object({
   size: z.string().min(1, "A size must be selected"),
@@ -28,6 +29,10 @@ type Props = {
 };
 
 export default function ProductDetails({ product }: Props) {
+  const cart = useCartStore((s) => s.cart);
+  const addItemToCart = useCartStore((s) => s.addItem);
+  const changeCartItemQuantity = useCartStore((s) => s.changeItemQuantity);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,8 +41,20 @@ export default function ProductDetails({ product }: Props) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    const { _id: id, name, price } = product;
+    const size = values.size;
+    const key = `[${id},${size}]`;
+
+    if (cart.has(key)) {
+      changeCartItemQuantity(id, size, 1);
+    } else {
+      addItemToCart({ id, size, name, price, quantity: 1 });
+    }
   }
+
+  useEffect(() => {
+    console.log({ cart });
+  }, [cart]);
 
   return (
     <Form {...form}>
