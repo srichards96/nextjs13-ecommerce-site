@@ -19,6 +19,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { getKey, useCartStore } from "@/app/store/useCartStore";
+import { useToast } from "../ui/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
 
 const formSchema = z.object({
   size: z.string().min(1, "A size must be selected"),
@@ -32,6 +34,8 @@ export default function ProductDetails({ product }: Props) {
   const cart = useCartStore((s) => s.cart);
   const addItemToCart = useCartStore((s) => s.addItem);
   const changeCartItemQuantity = useCartStore((s) => s.changeItemQuantity);
+
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,6 +61,21 @@ export default function ProductDetails({ product }: Props) {
         quantity: 1,
       });
     }
+
+    toast({
+      title: "Added to your cart:",
+      description: `1 * ${name} (size: ${size})`,
+      action: (
+        <ToastAction
+          altText="Undo last cart addition"
+          onClick={() => {
+            changeCartItemQuantity(id, size, -1);
+          }}
+        >
+          Undo
+        </ToastAction>
+      ),
+    });
   }
 
   return (
