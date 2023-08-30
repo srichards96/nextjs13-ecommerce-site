@@ -48,6 +48,14 @@ export default function SheetDemo() {
         </SheetHeader>
 
         <div className="py-4 overflow-x-hidden space-y-4">
+          {cart.size === 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Your cart is empty!</CardTitle>
+              </CardHeader>
+            </Card>
+          )}
+
           {Array.from(cart.entries()).map(([key, value]) => (
             <Card key={key} className="overflow-hidden">
               {value.imageUrl && (
@@ -113,8 +121,6 @@ export default function SheetDemo() {
               </CardFooter>
             </Card>
           ))}
-
-          {/* <pre>{JSON.stringify(Array.from(cart.entries()), null, 2)}</pre> */}
         </div>
 
         <SheetFooter className="gap-4">

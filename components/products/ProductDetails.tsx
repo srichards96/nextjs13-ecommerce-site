@@ -43,7 +43,7 @@ export default function ProductDetails({ product }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      quantity: 1,
+      quantity: "1" as unknown as number,
       size: "",
     },
   });
