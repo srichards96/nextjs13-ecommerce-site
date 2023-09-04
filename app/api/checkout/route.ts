@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       line_items,
       mode: "payment",
       success_url: `${origin}/payment?success=true`,
-      cancel_url: `${origin}/payment?canceled=true`,
+      cancel_url: `${origin}/`,
     });
     return NextResponse.json(session.url);
   } catch (err: any) {
