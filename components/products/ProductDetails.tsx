@@ -49,7 +49,7 @@ export default function ProductDetails({ product }: Props) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const { _id: id, name, images, price } = product;
+    const { _id: id, name, images, price, stripeProductId } = product;
     const { size, quantity } = values;
     const key = getKey(id, size);
 
@@ -63,6 +63,7 @@ export default function ProductDetails({ product }: Props) {
         imageUrl: images[0]?.url ?? "",
         price,
         quantity,
+        stripeProductId,
       });
     }
 

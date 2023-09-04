@@ -9,4 +9,5 @@ export type Product = {
   categories: string[];
   sizes: string[];
   colors: string[];
+  stripeProductId: string;
 };

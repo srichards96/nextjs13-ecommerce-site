@@ -42,6 +42,7 @@ export const productsQuery = (options?: ProductsQueryOptions) => {
       colors,
       sizes,
       colors,
+      stripeProductId,
     }
     [name match "*${search}*"]
     [${categories.map((c) => `"${c}" in categories`).join(" || ")}]
@@ -63,4 +64,5 @@ export const productBySlugQuery = (slug: string) => groq`
     colors,
     sizes,
     colors,
+    stripeProductId,
   }[0]`;

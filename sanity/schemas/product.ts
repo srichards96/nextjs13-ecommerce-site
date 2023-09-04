@@ -71,5 +71,11 @@ export default defineType({
       title: "Price",
       type: "number",
     }),
+
+    defineField({
+      name: "stripeProductId",
+      title: "Stripe Product Id",
+      type: "string",
+    }),
   ],
 });

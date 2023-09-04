@@ -25,14 +25,36 @@ import { formatPrice } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import Image from "next/image";
 import ConfirmDialog from "../dialogs/ConfirmDialog";
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { useToast } from "../ui/use-toast";
 
 export default function SheetDemo() {
+  const { toast } = useToast();
   const cart = useCartStore((s) => s.cart);
-  const addItemToCart = useCartStore((s) => s.addItem);
   const removeItemFromCart = useCartStore((s) => s.removeItem);
   const changeCartItemQuantity = useCartStore((s) => s.changeItemQuantity);
   const clearCart = useCartStore((s) => s.clear);
+
+  async function submitToCheckout() {
+    const body = [...cart.entries()].map(([_k, v]) => ({
+      stripeProductId: v.stripeProductId,
+      quantity: v.quantity,
+    }));
+
+    try {
+      const req = await fetch("/api/checkout", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+      const url = await req.json();
+      location.href = url;
+    } catch {
+      toast({
+        title: "Something went wrong!",
+        variant: "destructive",
+      });
+    }
+  }
 
   return (
     <Sheet>
@@ -138,7 +160,11 @@ export default function SheetDemo() {
             }
           />
           <SheetClose asChild>
-            <Button type="submit" disabled={cart.size === 0}>
+            <Button
+              type="submit"
+              disabled={cart.size === 0}
+              onClick={submitToCheckout}
+            >
               Go to checkout
             </Button>
           </SheetClose>

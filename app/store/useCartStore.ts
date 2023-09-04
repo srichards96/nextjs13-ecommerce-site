@@ -11,6 +11,7 @@ type CartItem = {
   imageUrl: string;
   price: number;
   quantity: number;
+  stripeProductId: string;
 };
 
 type CartState = {
