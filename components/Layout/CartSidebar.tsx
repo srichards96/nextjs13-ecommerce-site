@@ -1,6 +1,6 @@
 "use client";
 
-import { useCartStore } from "@/app/store/useCartStore";
+import { useCartStore } from "@/store/useCartStore";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,

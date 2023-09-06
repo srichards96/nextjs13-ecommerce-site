@@ -2,7 +2,7 @@
 
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect } from "react";
-import { useCartStore } from "../store/useCartStore";
+import { useCartStore } from "../../store/useCartStore";
 import {
   Card,
   CardContent,

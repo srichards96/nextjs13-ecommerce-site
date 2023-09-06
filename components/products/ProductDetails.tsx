@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { getKey, useCartStore } from "@/app/store/useCartStore";
+import { getKey, useCartStore } from "@/store/useCartStore";
 import { useToast } from "../ui/use-toast";
 import { ToastAction } from "@radix-ui/react-toast";
 import { Input } from "../ui/input";
