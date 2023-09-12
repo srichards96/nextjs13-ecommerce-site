@@ -1,8 +1,15 @@
-import { render, screen } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import "@testing-library/jest-dom";
-import ProductGridItem from "../../components/products/ProductGridItem";
 import { Product } from "@/sanity/lib/models/Product";
 import ProductGrid from "@/components/products/ProductGrid";
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 
 const testProduct: Product = {
   _id: "",
@@ -22,6 +29,21 @@ const testProductsArray: Product[] = [
   { ...testProduct, _id: "2" },
   { ...testProduct, _id: "3" },
 ];
+
+const server = setupServer(
+  rest.get("/api/products", (_req, res, ctx) => {
+    return res(
+      ctx.json([
+        { ...testProduct, _id: "4" },
+        { ...testProduct, _id: "5" },
+        { ...testProduct, _id: "6" },
+      ])
+    );
+  })
+);
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 test("No grid items should be rendered if no products are provided", () => {
   render(<ProductGrid initialProducts={[]} fetchSize={10} />);
@@ -75,4 +97,29 @@ test("`End of results` card should not be rendered if 1+ products are provided a
   render(<ProductGrid initialProducts={testProductsArray} fetchSize={3} />);
 
   expect(screen.queryByText("End of results")).toBeNull();
+});
+
+test("Clicking `Get more...` button should fetch and display more products", async () => {
+  render(<ProductGrid initialProducts={testProductsArray} fetchSize={3} />);
+
+  fireEvent.click(screen.getByText("Get more..."));
+
+  await waitFor(() => expect(screen.queryAllByRole("link")).toHaveLength(6));
+});
+
+test("When fetching more products, if the number of products returned is < fetch size, the `Get more...` button should be replaced by the `End of results` card", async () => {
+  server.use(
+    rest.get("/api/products", (_req, res, ctx) => {
+      return res(ctx.json([{ ...testProduct, _id: "4" }]));
+    })
+  );
+
+  render(<ProductGrid initialProducts={testProductsArray} fetchSize={3} />);
+
+  fireEvent.click(screen.getByText("Get more..."));
+
+  await waitFor(() => {
+    expect(screen.queryByText("Get more...")).toBeNull();
+    expect(screen.queryByText("End of results")).toBeDefined();
+  });
 });
