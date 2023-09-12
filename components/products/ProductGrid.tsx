@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import Image from "next/image";
-import Link from "next/link";
-import { formatPrice } from "@/lib/utils";
+import { Card, CardHeader, CardTitle } from "../ui/card";
 import { Product } from "@/sanity/lib/models/Product";
 import { useEffect, useState } from "react";
 import { ProductSort } from "@/sanity/lib/types";

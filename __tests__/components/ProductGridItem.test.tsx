@@ -24,7 +24,7 @@ const testProductWithImage: Product = {
   description: "A test product description",
   price: 1000,
   currency: "GBP",
-  images: [{ url: "" }],
+  images: [{ url: "https://google.com" }],
   stripeProductId: "12345",
   categories: [],
   sizes: [],
