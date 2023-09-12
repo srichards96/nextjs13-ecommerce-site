@@ -14,6 +14,7 @@ import { Product } from "@/sanity/lib/models/Product";
 import { useEffect, useState } from "react";
 import { ProductSort } from "@/sanity/lib/types";
 import { Button } from "../ui/button";
+import ProductGridItem from "./ProductGridItem";
 
 type Props = {
   initialProducts: Product[];
@@ -88,28 +89,7 @@ export default function ProductGrid({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         {products.map((p) => (
-          <Link key={p._id} href={`/products/${p.slug}`}>
-            <Card className="overflow-hidden h-full flex flex-col hover:bg-accent transition-colors">
-              {!!p.images.length && (
-                <Image
-                  src={p.images[0].url}
-                  alt={p.name}
-                  width="400"
-                  height="400"
-                  className="w-full"
-                />
-              )}
-              <CardHeader>
-                <CardTitle>{p.name}</CardTitle>
-              </CardHeader>
-
-              {!!p.price && (
-                <CardContent className="mt-auto">
-                  <CardDescription>{formatPrice(p.price)}</CardDescription>
-                </CardContent>
-              )}
-            </Card>
-          </Link>
+          <ProductGridItem key={p._id} product={p} />
         ))}
       </div>
 
