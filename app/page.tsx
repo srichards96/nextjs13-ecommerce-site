@@ -1,5 +1,4 @@
 import { getCachedClient } from "@/sanity/lib/getClient";
-import { SanityDocument } from "sanity";
 import ProductGrid from "@/components/products/ProductGrid";
 import ProductSortSelect from "@/components/products/ProductSortSelect";
 import {
@@ -11,6 +10,9 @@ import {
 import { ProductSort } from "@/sanity/lib/types";
 import ProductFilters from "@/components/products/ProductFilters";
 import ProductSearch from "@/components/products/ProductSearch";
+import { Product } from "@/sanity/lib/models/Product";
+
+const fetchSize = Number(process.env.NEXT_PUBLIC_PRODUCT_FETCH_COUNT);
 
 type Props = {
   searchParams: {
@@ -42,13 +44,16 @@ export default async function Home({ searchParams }: Props) {
   const uniqueSizes = await client<string[]>(uniqueProductSizesQuery);
   const uniqueColors = await client<string[]>(uniqueProductColorsQuery);
 
-  const products = await client<SanityDocument[]>(
+  const products = await client<Product[]>(
     productsQuery({
       sort,
       search,
       categories: selectedCategories,
       sizes: selectedSizes,
       colors: selectedColors,
+
+      count: fetchSize,
+      offset: 0,
     })
   );
 
@@ -77,7 +82,15 @@ export default async function Home({ searchParams }: Props) {
             </div>
           </div>
           <div>
-            <ProductGrid products={products} />
+            <ProductGrid
+              initialProducts={products}
+              fetchSize={fetchSize}
+              sort={sort}
+              search={search}
+              categories={selectedCategories}
+              sizes={selectedSizes}
+              colors={selectedColors}
+            />
           </div>
         </div>
       </div>
