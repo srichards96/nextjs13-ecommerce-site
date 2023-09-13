@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import ProductGridItem from "@/components/products/ProductGridItem";
 import { Product } from "@/sanity/lib/models/Product";
 

@@ -1,11 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { Product } from "@/sanity/lib/models/Product";
 import ProductGrid from "@/components/products/ProductGrid";
 import { rest } from "msw";

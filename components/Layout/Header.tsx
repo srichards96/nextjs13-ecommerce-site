@@ -3,11 +3,8 @@
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../ui/button";
-import { Moon, MoreHorizontal, ShoppingCart, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import CartSidebar from "./CartSidebar";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const pathname = usePathname();
@@ -30,35 +27,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  );
-}
-
-function ThemeToggle() {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) {
-    return (
-      <Button variant="ghost" size="icon" disabled>
-        <MoreHorizontal />
-      </Button>
-    );
-  }
-
-  function toggleTheme() {
-    setTheme(theme === "light" ? "dark" : "light");
-  }
-
-  return (
-    <Button
-      variant={"ghost"}
-      size="icon"
-      onClick={toggleTheme}
-      suppressHydrationWarning
-    >
-      {theme === "light" ? <Sun /> : <Moon />}
-    </Button>
   );
 }

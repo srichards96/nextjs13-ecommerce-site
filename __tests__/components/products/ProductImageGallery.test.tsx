@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import { Product } from "@/sanity/lib/models/Product";
 import ProductImageGallery from "@/components/products/ProductImageGallery";
 
